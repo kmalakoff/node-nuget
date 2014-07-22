@@ -64,6 +64,7 @@ module.exports = class NodeNuget
     # ensure there is a file on disk
     queue.defer (callback) ->
       return callback(null, file_path = file) unless file.pipe
+      return callback() if fs.existsSync(file_path = file.path) # use if exists on disk
 
       callback = debounceCallback(callback)
       file_path = randomFilename(); owned = true

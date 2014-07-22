@@ -1,7 +1,9 @@
 nuget
 ==================
 
-Nuget library wrapper for Node.js using Vinyl files.
+Nuget library wrapper for Node.js.
+
+This library uses [Vinyl](https://github.com/wearefractal/vinyl) files for flexibility and Gulp compatibility.
 
 # Raw usage
 
