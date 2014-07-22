@@ -11,7 +11,9 @@ require 'shelljs/global'
 NUGET_EXE = path.resolve(path.join(__dirname, './bin/NuGet.exe'))
 
 runCommand = (command, arg) ->
-  exec "/usr/bin/mono --runtime=v4.0 #{NUGET_EXE} #{command} #{arg}"
+  args = [NUGET_EXE, command, arg]
+  args.unshift('mono') unless process.platform is 'win32'
+  exec args.join(' ')
 
 debounceCallback = (callback) ->
   debounced_callback = -> return if debounced_callback.was_called; debounced_callback.was_called = true; callback.apply(null, Array.prototype.slice.call(arguments, 0))
