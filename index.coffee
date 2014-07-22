@@ -1,9 +1,11 @@
 fs = require 'fs'
 path = require 'path'
+_ = require 'underscore'
 Queue = require 'queue-async'
 es = require 'event-stream'
 et = require 'elementtree'
 crypto = require 'crypto'
+vinyl = require 'vinyl-fs'
 
 require 'shelljs/global'
 NUGET_EXE = path.resolve(path.join(__dirname, './bin/NuGet.exe'))
@@ -17,7 +19,7 @@ debounceCallback = (callback) ->
 
 getFile = (file, callback) ->
   return callback(null, file) if file.pipe
-  vinyl.src(file, options)
+  vinyl.src(file)
     .pipe es.writeArray (err, files) ->
       return callback(err) if err
       return callback(new Error "Expecting one file for #{file}. Found #{files.length}") if files.length is 0 or files.length > 1
@@ -27,28 +29,30 @@ randomFilename = -> crypto.createHash('sha1').update(new Date().getTime().toStri
 
 module.exports = class NodeNuget
   @setApiKey: (key, callback) ->
-    return callback(new Error 'Failed to set API key') if runCommand('setApiKey', options.key).code isnt 0
+    return callback(new Error 'Failed to set API key') if runCommand('setApiKey', key).code isnt 0
     callback()
 
   @pack: (file, callback) ->
     getFile file, (err, file) ->
       return callback(err) if err
 
-      directory = path.dirname(file.path)
-
-      package_desc = et.parse(data)
-      package_id = package_desc.findtext('./metadata/id')
-      package_version = package_desc.findtext('./metadata/version')
-      package_path = path.resolve(path.join(directory, "#{package_id}.#{package_version}.nupkg"))
-
-      files = (path.join(directory, item.attrib?.src) for item in package_desc.findall('./files/file'))
-      if (missing_files = (item for item in file when not fs.existsSync(item))).length
-        return callback(new Error "Nuget: cannot build #{file.path}. Missing files: #{missing_files}")
-
-      return callback(new Error "Failed to pack file: #{file.path}") if runCommand('pack', file.path).code isnt 0
-      getFile package_path, (err, file) ->
+      file.pipe es.wait (err, data) ->
         return callback(err) if err
-        fs.unlink package_path, -> callback(err, file)
+
+        package_desc = et.parse(data.toString())
+        package_id = package_desc.findtext('./metadata/id')
+        package_version = package_desc.findtext('./metadata/version')
+
+        files = (path.join(path.dirname(file.path), item.attrib?.src) for item in package_desc.findall('./files/file'))
+        if (missing_files = (item for item in file when not fs.existsSync(item))).length
+          return callback(new Error "Nuget: cannot build #{file.path}. Missing files: #{missing_files}")
+
+        return callback(new Error "Failed to pack file: #{file.path}") if runCommand('pack', file.path).code isnt 0
+
+        package_path = path.resolve(path.join(process.cwd(), '.', "#{package_id}.#{package_version}.nupkg"))
+        getFile package_path, (err, file) ->
+          return callback(err) if err
+          fs.unlink package_path, -> callback(err, file)
 
   @push: (file, callback) ->
     file_path = null; owned = false
@@ -74,4 +78,4 @@ module.exports = class NodeNuget
     # clean up temp file if needed
     queue.await (err) ->
       fs.unlinkSync(file_path) if file_path and owned and fs.existsSync(file_path)
-      calback(err)
+      callback(err)
