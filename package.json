@@ -24,6 +24,7 @@
     "semver": "^2.3.1",
     "shelljs": "^0.3.0",
     "underscore": "*",
+    "queue-async": "*",
     "vinyl-fs": "^0.3.4"
   }
 }

@@ -1,7 +1,9 @@
 fs = require 'fs'
 path = require 'path'
+Queue = require 'queue-async'
 es = require 'event-stream'
 et = require 'elementtree'
+crypto = require 'crypto'
 
 require 'shelljs/global'
 NUGET_EXE = path.resolve(path.join(__dirname, './bin/NuGet.exe'))
@@ -20,6 +22,8 @@ getFile = (file, callback) ->
       return callback(err) if err
       return callback(new Error "Expecting one file for #{file}. Found #{files.length}") if files.length is 0 or files.length > 1
       callback(null, files[0])
+
+randomFilename = -> crypto.createHash('sha1').update(new Date().getTime().toString()+_.uniqueId()).digest('hex')
 
 module.exports = class NodeNuget
   @setApiKey: (key, callback) ->
@@ -47,7 +51,27 @@ module.exports = class NodeNuget
         fs.unlink package_path, -> callback(err, file)
 
   @push: (file, callback) ->
-    getFile file, (err, file) ->
-      return callback(err) if err
-      return callback(new Error "Failed to push file: #{file.path}") if runCommand('push', package_path.replace(process.cwd() + '/', '')).code isnt 0
+    file_path = null; owned = false
+
+    queue = new Queue(1)
+
+    # ensure there is a file on disk
+    queue.defer (callback) ->
+      return callback(null, file_path = file) unless file.pipe
+
+      callback = debounceCallback(callback)
+      file_path = randomFilename(); owned = true
+      file
+        .pipe(fs.createWriteStream(file_path))
+        .on('finish', callback)
+        .on('error', callback)
+
+    # run push command
+    queue.defer (callback) ->
+      return callback(new Error "Failed to push file: #{file.path}") if runCommand('push', file_path).code isnt 0
       calback()
+
+    # clean up temp file if needed
+    queue.await (err) ->
+      fs.unlinkSync(file_path) if file_path and owned and fs.existsSync(file_path)
+      calback(err)
