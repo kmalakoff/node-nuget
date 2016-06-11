@@ -35,3 +35,14 @@ nugetGulp = -> es.map (file, callback) ->
 gulp.src('*.nuspec')
   .pipe(nugetGulp())
 ```
+
+Configuring Nuget
+-------------
+
+Add the 'nuget.org' source to your Nuget config file
+
+$ mono nuget.exe sources add -name "nuget.org" -source "https://www.nuget.org/api/v2/package"
+
+Add the credentials for your source
+
+$ mono nuget.exe setApiKey {YOUR_API_KEY} -source nuget.org
