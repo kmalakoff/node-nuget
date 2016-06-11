@@ -1,6 +1,6 @@
 {
   "name": "nuget",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Nuget library wrapper for Node.js",
   "keywords": [
     "node",
@@ -19,12 +19,12 @@
   },
   "dependencies": {
     "coffee-script": "*",
-    "elementtree": "^0.1.6",
+    "elementtree": "*",
     "event-stream": "*",
-    "semver": "^2.3.1",
-    "shelljs": "^0.3.0",
+    "semver": "*",
+    "shelljs": "*",
     "underscore": "*",
     "queue-async": "*",
-    "vinyl-fs": "^0.3.4"
+    "vinyl-fs": "*"
   }
 }
