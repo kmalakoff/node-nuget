@@ -10,8 +10,9 @@ vinyl = require 'vinyl-fs'
 require 'shelljs/global'
 NUGET_EXE = path.resolve(path.join(__dirname, './bin/NuGet.exe'))
 
-runCommand = (command, arg) ->
-  args = [NUGET_EXE, command, arg]
+runCommand = (command, arg_or_args) ->
+  args = [NUGET_EXE, command]
+  args = args.concat(if (_.isArray(arg_or_args)) then arg_or_args else [arg_or_args])
   args.unshift('mono') unless process.platform is 'win32'
   exec args.join(' ')
 
@@ -75,7 +76,7 @@ module.exports = class NodeNuget
 
     # run push command
     queue.defer (callback) ->
-      return callback(new Error "Failed to push file: #{file.path}") if runCommand('push', file_path).code isnt 0
+      return callback(new Error "Failed to push file: #{file.path}") if runCommand('push', [file_path, '-Source', 'NuGet.org']).code isnt 0
       callback()
 
     # clean up temp file if needed
