@@ -76,7 +76,7 @@ module.exports = class NodeNuget
 
     # run push command
     queue.defer (callback) ->
-      return callback(new Error "Failed to push file: #{file.path}") if runCommand('push', [file_path, '-Source', 'NuGet.org']).code isnt 0
+      return callback(new Error "Failed to push file: #{file.path}") if runCommand('push', [file_path, '-Source', 'NuGet.org', '-NonInteractive']).code isnt 0
       callback()
 
     # clean up temp file if needed
