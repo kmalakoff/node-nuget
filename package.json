@@ -17,6 +17,9 @@
   "engines": {
     "node": ">=0.8.0"
   },
+  "scripts": {
+    "build": "coffee -c -o lib src"
+  },
   "dependencies": {
     "coffee-script": "*",
     "elementtree": "*",
