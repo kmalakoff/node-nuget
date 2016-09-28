@@ -7,7 +7,7 @@
     "nuget",
     "mono"
   ],
-  "main": "src/index.coffee",
+  "main": "src/index.js",
   "license": "MIT",
   "author": "Kevin Malakoff (https://github.com/kmalakoff)",
   "repository": {
