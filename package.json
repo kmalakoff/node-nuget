@@ -1,6 +1,6 @@
 {
   "name": "nuget",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Nuget library wrapper for Node.js",
   "keywords": [
     "node",
