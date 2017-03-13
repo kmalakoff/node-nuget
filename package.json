@@ -1,13 +1,13 @@
 {
   "name": "nuget",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Nuget library wrapper for Node.js",
   "keywords": [
     "node",
     "nuget",
     "mono"
   ],
-  "main": "index.coffee",
+  "main": "index.js",
   "license": "MIT",
   "author": "Kevin Malakoff (https://github.com/kmalakoff)",
   "repository": {
@@ -18,7 +18,6 @@
     "node": ">=0.8.0"
   },
   "dependencies": {
-    "coffee-script": "*",
     "elementtree": "*",
     "event-stream": "*",
     "semver": "*",
