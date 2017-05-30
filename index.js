@@ -7,14 +7,18 @@ const es = require('event-stream');
 const et = require('elementtree');
 const crypto = require('crypto');
 const vinyl = require('vinyl-fs');
+const commandExists = require('command-exists');
 
 require('shelljs/global');
-const NUGET_EXE = path.resolve(path.join(__dirname, './bin/NuGet.exe'));
+
+// If nuget is available on the host OS, use it instead of the version shipped with this module
+const isNugetInstalled = commandExists('nuget');
+const NUGET_EXE = isNugetInstalled ? 'nuget' : path.resolve(path.join(__dirname, './bin/NuGet.exe'));
 
 const runCommand = function(command, arg_or_args) {
   let args = [NUGET_EXE, command];
   args = args.concat((_.isArray(arg_or_args)) ? arg_or_args : [arg_or_args]);
-  if (process.platform !== 'win32') args.unshift('mono');
+  if (process.platform !== 'win32' && !isNugetInstalled) args.unshift('mono');
   return exec(args.join(' '));
 };
 
