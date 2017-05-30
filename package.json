@@ -18,12 +18,13 @@
     "node": ">=0.8.0"
   },
   "dependencies": {
+    "command-exists": "^1.2.2",
     "elementtree": "*",
     "event-stream": "*",
+    "queue-async": "*",
     "semver": "*",
     "shelljs": "*",
     "underscore": "*",
-    "queue-async": "*",
     "vinyl-fs": "*"
   }
 }
