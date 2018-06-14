@@ -1,6 +1,6 @@
 {
   "name": "nuget",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Nuget library wrapper for Node.js",
   "keywords": [
     "node",
@@ -24,6 +24,6 @@
     "shelljs": "*",
     "underscore": "*",
     "queue-async": "*",
-    "vinyl-fs": "*"
+    "vinyl-fs": "~2"
   }
 }
