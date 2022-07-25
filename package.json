@@ -26,7 +26,7 @@
     "test:engines": "nvu engines npm test"
   },
   "dependencies": {
-    "cross-spawn-cb": "^0.6.5",
+    "cross-spawn-cb": "^0.6.6",
     "elementtree": "*",
     "event-stream": "*",
     "queue-async": "*",
