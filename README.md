@@ -1,5 +1,4 @@
-nuget
-==================
+# nuget
 
 Nuget library wrapper for Node.js.
 
@@ -36,8 +35,7 @@ gulp.src('*.nuspec')
   .pipe(nugetGulp())
 ```
 
-Configuring Nuget
--------------
+## Configuring Nuget
 
 Add the 'nuget.org' source to your Nuget config file
 
