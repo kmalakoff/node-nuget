@@ -1,0 +1,1 @@
+{"version":3,"sources":["index.mjs"],"sourcesContent":["import nuget from './nuget.cjs';\nexport default nuget;"],"names":["nuget"],"mappings":";;;;+BACA;;;eAAA;;;+DADkB;;;;;;IAClB,WAAeA,iBAAK"}
