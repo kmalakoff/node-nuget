@@ -27,7 +27,7 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "cross-spawn-cb": "^0.6.18",
+    "cross-spawn-cb": "^2.4.1",
     "elementtree": "*",
     "event-stream": "*",
     "queue-async": "*",
